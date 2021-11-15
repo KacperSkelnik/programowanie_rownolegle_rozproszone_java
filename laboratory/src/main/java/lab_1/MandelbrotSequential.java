@@ -88,7 +88,7 @@ public class MandelbrotSequential {
             MandelbrotSequential MandelbrotTest = new MandelbrotSequential(param, param);
 
             Method create = MandelbrotSequential.class.getMethod("create");
-            times.add(testPerformance(MandelbrotTest, create,50));
+            times.add(testPerformance(MandelbrotTest, create,30));
         }
 
         saveToFile(times, "laboratory/src/main/java/lab_1/dane_do_wykresu.txt");
