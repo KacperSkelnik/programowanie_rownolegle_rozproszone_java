@@ -77,9 +77,10 @@ public class MandelbrotSequential {
     }
 
     public static void main(String[] args) throws IOException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
-        /*MandelbrotSequential Mandelbrot = new MandelbrotSequential(8192, 8192);
+        MandelbrotSequential Mandelbrot = new MandelbrotSequential(8192, 8192);
         Color[][] c = Mandelbrot.create();
-        paint(Mandelbrot.pictureWidth, Mandelbrot.pictureHigh, c, "piękny_rysunek_na_laboratorium.png");*/
+        paint(Mandelbrot.pictureWidth, Mandelbrot.pictureHigh, c,
+        "laboratory/src/main/java/lab_1/piękny_rysunek_na_laboratorium.png");
 
         Integer[] params = new Integer[]{32, 64, 128, 256, 512, 1024, 2048, 4096, 8192};
         ArrayList<Double> times = new ArrayList<>();
@@ -90,6 +91,6 @@ public class MandelbrotSequential {
             times.add(testPerformance(MandelbrotTest, create,50));
         }
 
-        saveToFile(times, "dane_do_wykresu.txt");
+        saveToFile(times, "laboratory/src/main/java/lab_1/dane_do_wykresu.txt");
     }
 }
