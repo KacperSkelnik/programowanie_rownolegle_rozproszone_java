@@ -129,7 +129,7 @@ public class MandelbrotParallelThreadPool {
         paint(Mandelbrot.pictureSize, Mandelbrot.pictureSize, c,
                 "laboratory/src/main/java/lab_2/piękny_rysunek_na_laboratorium.png");
 
-        /*Integer[] params = new Integer[]{32, 64, 128, 256, 512, 1024, 2048, 4096, 8192};
+        Integer[] params = new Integer[]{32, 64, 128, 256, 512, 1024, 2048, 4096, 8192};
         ArrayList<Double> times = new ArrayList<>();
         for (Integer param : params) {
             MandelbrotParallelThreadPool MandelbrotTest = new MandelbrotParallelThreadPool(param, param);
@@ -138,6 +138,6 @@ public class MandelbrotParallelThreadPool {
             times.add(testPerformance(MandelbrotTest, create, 10));
         }
 
-        saveToFile(times, "laboratory/src/main/java/lab_2/dane_do_wykresu.txt");*/
+        saveToFile(times, "laboratory/src/main/java/lab_2/dane_do_wykresu.txt");
     }
 }
