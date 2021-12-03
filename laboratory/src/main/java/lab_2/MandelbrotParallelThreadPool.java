@@ -29,7 +29,7 @@ public class MandelbrotParallelThreadPool {
 
     public MandelbrotParallelThreadPool(int size, int workers) {
         pictureSize = size;
-        chunkSize = (int) Math.ceil((float) pictureSize/workers); //workers;
+        chunkSize = (int) Math.ceil((float) pictureSize/workers); //workers; //jeśli chcemy testować w stosunku do wielkości chunka
 
         cornersWidth = new Double[]{-2.1, 0.6};
         cornersHigh = new Double[]{-1.2, 1.2};
