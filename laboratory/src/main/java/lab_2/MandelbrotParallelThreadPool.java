@@ -27,9 +27,9 @@ public class MandelbrotParallelThreadPool {
     Double[] Im;
 
 
-    public MandelbrotParallelThreadPool(int size, int chunk) {
+    public MandelbrotParallelThreadPool(int size, int workers) {
         pictureSize = size;
-        chunkSize = chunk;
+        chunkSize = (int) Math.ceil((float) pictureSize/workers); //workers;
 
         cornersWidth = new Double[]{-2.1, 0.6};
         cornersHigh = new Double[]{-1.2, 1.2};
@@ -123,21 +123,37 @@ public class MandelbrotParallelThreadPool {
 
     public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException,
             InterruptedException, IllegalAccessException, ExecutionException {
+        // Rysunek
         MandelbrotParallelThreadPool Mandelbrot = new MandelbrotParallelThreadPool(8192, 8);
         Color[][] c = Mandelbrot.create();
 
         paint(Mandelbrot.pictureSize, Mandelbrot.pictureSize, c,
                 "laboratory/src/main/java/lab_2/piękny_rysunek_na_laboratorium.png");
 
+
+        // Testy wydajności od wielkości
         Integer[] params = new Integer[]{32, 64, 128, 256, 512, 1024, 2048, 4096, 8192};
         ArrayList<Double> times = new ArrayList<>();
         for (Integer param : params) {
-            MandelbrotParallelThreadPool MandelbrotTest = new MandelbrotParallelThreadPool(param, param);
+            MandelbrotParallelThreadPool MandelbrotTest = new MandelbrotParallelThreadPool(param, 8);
 
             Method create = MandelbrotParallelThreadPool.class.getMethod("create");
             times.add(testPerformance(MandelbrotTest, create, 10));
         }
 
-        saveToFile(times, "laboratory/src/main/java/lab_2/dane_do_wykresu.txt");
+        saveToFile(times, "laboratory/src/main/java/lab_2/dane_do_wykresu1.txt");
+
+
+        // Testy wydajności op podziału dla różnych wielkości
+        Integer[] params2 = new Integer[]{4, 8, 16, 32, 64, 128};
+        ArrayList<Double> times2 = new ArrayList<>();
+        for (Integer param : params2) {
+            MandelbrotParallelThreadPool MandelbrotTest = new MandelbrotParallelThreadPool(4096, param);
+
+            Method create = MandelbrotParallelThreadPool.class.getMethod("create");
+            times.add(testPerformance(MandelbrotTest, create, 10));
+        }
+
+        saveToFile(times2, "laboratory/src/main/java/lab_2/dane_do_wykresu3_4096.txt");
     }
 }

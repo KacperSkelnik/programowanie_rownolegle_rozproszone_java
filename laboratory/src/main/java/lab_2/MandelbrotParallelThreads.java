@@ -144,12 +144,12 @@ public class MandelbrotParallelThreads {
         Integer[] params = new Integer[]{32, 64, 128, 256, 512, 1024, 2048, 4096, 8192};
         ArrayList<Double> times = new ArrayList<>();
         for (Integer param : params) {
-            MandelbrotParallelThreadPool MandelbrotTest = new MandelbrotParallelThreadPool(param, param);
+            MandelbrotParallelThreads MandelbrotTest = new MandelbrotParallelThreads(param, 8);
 
-            Method create = MandelbrotParallelThreadPool.class.getMethod("create");
+            Method create = MandelbrotParallelThreads.class.getMethod("create");
             times.add(testPerformance(MandelbrotTest, create, 10));
         }
 
-        saveToFile(times, "laboratory/src/main/java/lab_2/dane_do_wykresu.txt");
+        saveToFile(times, "laboratory/src/main/java/lab_2/dane_do_wykresu2.txt");
     }
 }
