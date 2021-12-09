@@ -5,9 +5,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import static java.lang.Math.exp;
-import static java.lang.Math.max;
-
 
 public class GaussianBlur {
     BufferedImage im;
