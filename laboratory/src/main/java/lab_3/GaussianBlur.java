@@ -16,82 +16,65 @@ public class GaussianBlur {
     double sigma;
     double[][] filter;
     BufferedImage output;
+    double sum = 0d;
 
     public GaussianBlur(String imageFile, int kernelSize) throws IOException {
         fileName = imageFile;
         size = kernelSize;
-        sigma = max(kernelSize/4, 1);
+        sigma = (kernelSize-1)/6;
         setKernelVals();
         getBufferedImage();
 
         output = new BufferedImage(im.getWidth(), im.getHeight(), BufferedImage.TYPE_INT_ARGB);
     }
 
-    public double gaussFun(int x, int y){
-        double eExpression = exp(-(x * x + y * y)/(2 * sigma * sigma));
-        return (eExpression / (2 * Math.PI * sigma * sigma));
-    }
-
     public void setKernelVals(){
         filter = new double[size][size];
-        double sum = 0d;
-        int radius = (size-1)/2;
-        for (int i=0; i < size; i++){
-            for (int j=0; j < size; j++){
-                double gauss = gaussFun(i-radius,j-radius);
-                filter[i][j] = gauss;
-                sum += gauss;
+        double[] pascal = new double[size];
+        for(int line = 1; line <= size; line++){
+            int C=1;
+            for(int i = 1; i <= line; i++) {
+                pascal[i-1] = C;
+                C = C * (line - i) / i;
             }
         }
 
-        for (int i=0; i < size; i++){
-            for (int j=0; j < size; j++){
-                filter[i][j] = filter[i][j]/sum;
+        for(int i=0; i<size; i++){
+            for(int j=0; j<size; j++){
+                filter[i][j] = pascal[i]*pascal[j];
+                sum += pascal[i]*pascal[j];
             }
         }
     }
+
 
     public void getBufferedImage() throws IOException {
         im = ImageIO.read(new File(fileName));
     }
 
     public void blur(int level){
-        int blue = 0;
-        int green = 0;
-        int red = 0;
-
-        int x_filter = 0;
-        for(int i=0; i<im.getWidth()-size; i++){
-            int y_filter = 0;
-            for(int j=level; j<level+size; j++){
-                int color = im.getRGB(i,j);
-                double factor = filter[x_filter][y_filter];
-                blue += (color & 0xFF) * factor;
-                green += ((color >>> 8) & 0xFF) * factor;
-                red += ((color >>> 16) & 0xFF) * factor;
-
-                y_filter++;
-            }
-            x_filter++;
-            if(x_filter==size){
-                x_filter=0;
-
-                for(int k=i-size+1; k<i+1; k++){
-                    for(int l=level; l<level+size; l++){
-                        output.setRGB(k, l, (red << 16) | (green << 8) | blue | 0xFF000000);
-                    }
+        for(int i=(size-1)/2; i<im.getWidth()-(size-1)/2; i++){
+            int blue = 0;
+            int green = 0;
+            int red = 0;
+            for(int x_filter=0; x_filter<size; x_filter++){
+                for(int y_filter=0; y_filter<size; y_filter++){
+                    int color = im.getRGB(i+x_filter-(size-1)/2,level+y_filter-(size-1)/2);
+                    blue += (color & 0xFF) * filter[x_filter][y_filter];
+                    green += ((color >>> 8) & 0xFF) * filter[x_filter][y_filter];
+                    red += ((color >>> 16) & 0xFF) * filter[x_filter][y_filter];
                 }
-
-                blue = 0;
-                green = 0;
-                red = 0;
             }
+            blue /= sum;
+            green /= sum;
+            red /= sum;
+            output.setRGB(i, level, (red << 16) | (green << 8) | blue | 0xFF000000);
         }
     }
 
 
     public void makeBlurSequential(String outputfile) throws IOException {
-        for(int i=0; i<im.getHeight()-size; i+=size){
+        for(int i=(size-1)/2; i<im.getHeight()-(size-1)/2; i++){
             blur(i);
         }
 
