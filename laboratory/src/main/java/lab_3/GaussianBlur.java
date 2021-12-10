@@ -15,6 +15,15 @@ public class GaussianBlur {
     BufferedImage output;
     double sum = 0d;
 
+    public GaussianBlur(BufferedImage image, int kernelSize) {
+        size = kernelSize;
+        sigma = (kernelSize-1)/6;
+        setKernelVals();
+        im = image;
+
+        output = new BufferedImage(im.getWidth(), im.getHeight(), BufferedImage.TYPE_INT_ARGB);
+    }
+
     public GaussianBlur(String imageFile, int kernelSize) throws IOException {
         fileName = imageFile;
         size = kernelSize;
