@@ -84,45 +84,46 @@ public class QuickSortParallel {
 
     public static void main(String[] args) throws IOException {
 
-        int size = 5000000;
-        int numIter = 40;
+        Integer[] sizes = new Integer[]{100,1000,10000,100000,1000000,2000000,3000000,4000000,5000000};
+        int numIter = 10;
 
         ArrayList<Double> timesArraysSort = new ArrayList<>();
         ArrayList<Double> timesQuickSort = new ArrayList<>();
 
-        double duration = 0.0;
-        double duration2 = 0.0;
-        for(int k=0; k<numIter; k++){
-            Integer[] array1 = new Integer[size];
-            Integer[] array2 = new Integer[size];
-            for(int i=0; i<array1.length; i++) {
-                int tmp = new Random().nextInt(size);
-                array1[i] = tmp;
-                array2[i] = tmp;
+        for (int size : sizes) {
+            double duration = 0.0;
+            double duration2 = 0.0;
+            for (int k = 0; k < numIter; k++) {
+                Integer[] array1 = new Integer[size];
+                Integer[] array2 = new Integer[size];
+                for (int i = 0; i < array1.length; i++) {
+                    int tmp = new Random().nextInt(size);
+                    array1[i] = tmp;
+                    array2[i] = tmp;
+                }
+                long startTime = System.nanoTime();
+                Arrays.sort(array1);
+                long endTime = System.nanoTime();
+                duration += (double) ((endTime - startTime) / 1000000 / numIter);
+
+                long startTime2 = System.nanoTime();
+                QuickSortRunnable quick = new QuickSortRunnable(Runtime.getRuntime().availableProcessors(),
+                        array2, 0, array2.length - 1);
+                quick.run();
+                long endTime2 = System.nanoTime();
+                duration2 += (double) ((endTime2 - startTime2) / 1000000 / numIter);
             }
-            long startTime = System.nanoTime();
-            Arrays.sort(array1);
-            long endTime = System.nanoTime();
-            duration += (double) ((endTime - startTime)/1000000/numIter);
-
-            long startTime2 = System.nanoTime();
-            QuickSortRunnable quick = new QuickSortRunnable(Runtime.getRuntime().availableProcessors(),
-                    array2, 0, array2.length - 1);
-            quick.run();
-            long endTime2 = System.nanoTime();
-            duration2 += (double) ((endTime2 - startTime2)/1000000/numIter);
+            timesArraysSort.add(duration);
+            timesQuickSort.add(duration2);
         }
-        timesArraysSort.add(duration);
-        timesQuickSort.add(duration2);
-
-        saveToFile(timesArraysSort, "laboratory/src/main/java/lab_4/dane.txt");
-        saveToFile(timesQuickSort, "laboratory/src/main/java/lab_4/dane_parallel.txt");
+        saveToFile(timesArraysSort, "laboratory/src/main/java/lab_4/wykres_dane.txt");
+        saveToFile(timesQuickSort, "laboratory/src/main/java/lab_4/wykres_dane_parallel.txt");
 
 
-        Integer[] array1 = new Integer[size];
-        Integer[] array2 = new Integer[size];
+        Integer[] array1 = new Integer[sizes[1]];
+        Integer[] array2 = new Integer[sizes[1]];
         for(int i=0; i<array1.length; i++) {
-            int tmp = new Random().nextInt(size);
+            int tmp = new Random().nextInt(sizes[1]);
             array1[i] = tmp;
             array2[i] = tmp;
         }
